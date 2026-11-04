@@ -1,0 +1,20 @@
+I used ChatGPT to help implement MP3
+
+I provided the starter code and the assignment requirements
+I discussed and reviewed the implementation plan with ChatGPT
+I configured MongoDB Atlas database
+I configured and deployed the application on Render
+I reviewed the code written by ChatGPT
+I collaborated on testing and debugging
+
+The assistance included:
+> defining User and Task schemas with required fields, defaults, unique emails, and server-controlled creation dates
+> implementing GET, POST, PUT, and DELETE endpoints for users and tasks
+> implementing where, sort, select, skip, limit, and count queries
+> validating request bodies, resource IDs, referenced resources, and assignment consistency
+> synchronizing pendingTasks, assignedUser, and assignedUserName during creation, replacement, reassignment, completion, renaming, and deletion
+> using database transactions to prevent partial changes when requests fail
+> returning appropriate HTTP status codes and JSON responses with message and data fields
+> connecting the server to MongoDB Atlas and handling browser requests from other websites
+> writing tests
+> debugging
