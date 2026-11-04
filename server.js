@@ -20,6 +20,7 @@ var allowCrossDomain = function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+    if (req.method === 'OPTIONS') return res.status(204).end();
     next();
 };
 app.use(allowCrossDomain);
@@ -30,7 +31,28 @@ app.use(express.json());
 
 // Use routes as a module (see index.js)
 require('./routes')(app, router);
+app.use(function (req, res) {
+    res.status(404).json({ message: 'Endpoint not found.', data: null });
+});
+app.use(require('./routes/support').errorHandler);
 
 // Start the server
-app.listen(port);
-console.log('Server running on port ' + port);
+async function start() {
+    if (!process.env.MONGODB_URI) throw new Error('MONGODB_URI is required.');
+    await mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 15000 });
+    await require('./models/user').init();
+    await require('./models/task').init();
+    const server = app.listen(port, function () {
+        console.log('Server running on port ' + server.address().port);
+    });
+    return server;
+}
+
+if (require.main === module) {
+    start().catch(function () {
+        console.error('Unable to start the server. Check the database connection and configuration.');
+        process.exitCode = 1;
+    });
+}
+
+module.exports = { app, start };
